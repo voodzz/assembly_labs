@@ -12,11 +12,19 @@
 #include "Division.h"
 #include "Subtraction.h"
 #include "Repo.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
 
 class Assembler {
 public:
-    Assembler() = default;
-    ~Assembler() = default;
+    Assembler() {
+        fileLogger7->set_level(spdlog::level::debug);
+        fileLogger7->debug("Assembler constructor.");
+    }
+
+    ~Assembler() {
+        fileLogger7->debug("Assembler destructor.");
+    }
 
     Assembler(Assembler&& other) = delete;
     Assembler& operator= (Assembler&& other) = delete;
@@ -25,12 +33,15 @@ public:
 
     template<class T>
     void compileCodeFromFile(const std::string& filePath, Repo<T>& repo) {
+        fileLogger7->info("Compiling has started.");
         if (repo.data_.size() == 1) {
+            fileLogger7->critical("Data is empty.");
             throw std::runtime_error("Data is empty.");
         }
 //        data["Ak"] = 0;
         std::ifstream fin(filePath, std::ios::in);
         if (!fin.is_open()) {
+            fileLogger7->critical("File is not open.");
             throw std::runtime_error("File is not open.");
         }
         bool isDataRead = false;
@@ -41,6 +52,7 @@ public:
             std::getline(fin, str);
             if (str == "end" && !isCodeFound) {
                 fin.close();
+                fileLogger7->critical("There is no code.");
                 throw std::runtime_error("There is no code.");
             } else if (str == "end") {
                 fin.close();
@@ -94,9 +106,13 @@ public:
         }
         fin.close();
         if (!isCodeFound) {
+            fileLogger7->critical("There is no code.");
             throw std::runtime_error("There is no code.");
         }
+        fileLogger7->info("Compiling has ended.");
     }
+private:
+    static inline auto fileLogger7 = spdlog::basic_logger_mt("AssemblerLogger","CMakeFiles/loggers/logger1.txt");
 };
 
 

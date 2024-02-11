@@ -1,11 +1,17 @@
 #include <iostream>
-#include "Parser.h"
+#include "File.h"
+#include "Assembler.h"
+#include "Operation.h"
+#include "Repo.h"
 
 int main() {
-    Parser parser;
-    std::map<std::string, int> result = parser.readDataFromFile<int>("CMakeFiles/data/input.txt");
-    for (const auto& [key, value] : result) {
-        std::cout << key << ' ' << value << '\n';
-    }
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    File file;
+    file.readDataFromFile<int>("CMakeFiles/data/input.txt", repo);
+    Assembler assembler;
+    assembler.compileCodeFromFile("CMakeFiles/data/input.txt", repo);
+    repo.codeExecute();
+    file.outputToJson("CMakeFiles/data/output.json", repo);
     return 0;
 }
