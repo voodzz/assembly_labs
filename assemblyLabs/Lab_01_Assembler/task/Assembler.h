@@ -11,6 +11,7 @@
 #include "Addition.h"
 #include "Division.h"
 #include "Subtraction.h"
+#include "Repo.h"
 
 class Assembler {
 public:
@@ -23,28 +24,31 @@ public:
     Assembler& operator= (const Assembler& other) = delete;
 
     template<class T>
-    T compileCodeFromFile(const std::string& filePath, std::map<std::string, T>& data) {
-        if (data.empty()) {
+    void compileCodeFromFile(const std::string& filePath, Repo<T>& repo) {
+        if (repo.data_.size() == 1) {
             throw std::runtime_error("Data is empty.");
         }
-        data["Ak"] = 0;
+//        data["Ak"] = 0;
         std::ifstream fin(filePath, std::ios::in);
         if (!fin.is_open()) {
             throw std::runtime_error("File is not open.");
         }
         bool isDataRead = false;
-        T result;
+        bool isCodeFound = false;
         std::string lastMove;
         while (!fin.eof()) {
             std::string str;
             std::getline(fin, str);
-            if (str == "end") {
+            if (str == "end" && !isCodeFound) {
                 fin.close();
-                result = data[lastMove];
-                return result;
+                throw std::runtime_error("There is no code.");
+            } else if (str == "end") {
+                fin.close();
+                return;
             }
             if (str == ".code\r") {
                 isDataRead = true;
+                isCodeFound = true;
                 continue;
             }
             if (isDataRead) {
@@ -70,27 +74,28 @@ public:
                 }
 
                 if (operation == "mov") {
-                    Moving<T> move;
-                    move.execute(operand1, operand2, data);
-                    lastMove = operand1;
+                    repo.operations_.push_back(new Moving<T>(operand1, operand2));
+//                    move.execute();
+//                    lastMove = operand1;
                 } else if (operation == "add") {
-                    Addition<T> addition;
-                    addition.execute(operand1, operand2, data);
+                    repo.operations_.push_back(new Addition<T>(operand1, operand2));
+//                    addition.execute();
                 } else if (operation == "sub") {
-                    Subtraction<T> subtraction;
-                    subtraction.execute(operand1, operand2, data);
+                    repo.operations_.push_back(new Subtraction<T>(operand1, operand2));
+//                    subtraction.execute();
                 } else if (operation == "mul" || operation == "imul") {
-                    Multiplication<T> multiplication;
-                    multiplication.execute(operand1, operand2,data);
+                    repo.operations_.push_back(new Multiplication<T>(operand1, operand2));
+//                    multiplication.execute();
                 } else if (operation == "div" || operation == "idiv") {
-                    Division<T> division;
-                    division.execute(operand1, operand2, data);
+                    repo.operations_.push_back(new Division<T>(operand1));
+//                    division.execute();
                 }
             }
         }
         fin.close();
-        result = data[lastMove];
-        return result;
+        if (!isCodeFound) {
+            throw std::runtime_error("There is no code.");
+        }
     }
 };
 

@@ -7,17 +7,40 @@
 template<class T>
 class Moving : public Operation<T> {
 public:
-    Moving() = default;
+    Moving() = delete;
     ~Moving() = default;
 
-    Moving(Moving&& other) = delete;
-    Moving& operator= (Moving&& other) = delete;
-    Moving(const Moving& other) = delete;
-    Moving& operator= (const Moving& other) = delete;
+    Moving(const std::string& receiver, const std::string& source) : receiver_(receiver), source_(source) {}
 
-    void execute(const std::string& operand1, const std::string& operand2, std::map<std::string, T>& data) const override {
-            data[operand1] = data[operand2];
+//    Moving(Moving&& other) = delete;
+//    Moving& operator= (Moving&& other) = delete;
+//    Moving(const Moving& other) = delete;
+//    Moving& operator= (const Moving& other) = delete;
+
+    void execute() override {
+        bool doesReceiverKeyExist = false;
+        bool doesSourceKeyExist = false;
+
+        for (const auto& [key, element] : Operation<T>::repo_->data_) {
+            if (key == receiver_) {
+                doesReceiverKeyExist = true;
+            }
+            if (key == source_) {
+                doesSourceKeyExist = true;
+            }
+        }
+
+        if (doesReceiverKeyExist && doesSourceKeyExist) {
+            Operation<T>::repo_->data_[receiver_] = Operation<T>::repo_->data_[source_];
+        } else if (!doesReceiverKeyExist) {
+            throw std::runtime_error("There is no element with key source_.");
+        } else if (!doesSourceKeyExist) {
+            throw std::runtime_error("There is no element with key receiver_.");
+        }
     }
+private:
+    std::string receiver_;
+    std::string source_;
 };
 
 

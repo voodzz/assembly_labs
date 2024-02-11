@@ -1,11 +1,16 @@
 #include <gtest/gtest.h>
 #include "Parser.h"
 #include "Assembler.h"
+#include "Operation.h"
+#include "Repo.h"
 
-TEST(ParserTest, DataReading) {
+TEST(ParserTests, DataReadingTest1) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
     Parser parser;
-    std::map<std::string, int> result = parser.readDataFromFile<int>("CMakeFiles/data/input_for_test1.txt");
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test1.txt", repo);
     std::map<std::string, int> tmp = {
+            {"Ak", 0},
             {"x00", -1},
             {"x01", 3},
             {"x02", 2},
@@ -13,10 +18,16 @@ TEST(ParserTest, DataReading) {
             {"x04", 10},
             {"x05", 0},
     };
-    EXPECT_EQ(result, tmp);
+    EXPECT_EQ(repo.data_, tmp);
+}
 
-    result = parser.readDataFromFile<int>("CMakeFiles/data/input_for_test2.txt");
-    tmp = {
+TEST(ParserTests, DataReadingTest2) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test2.txt", repo);
+    std::map<std::string, int> tmp = {
+            {"Ak", 0},
             {"x00", 7},
             {"x01", 84},
             {"x02", -20},
@@ -24,27 +35,86 @@ TEST(ParserTest, DataReading) {
             {"x04", 0},
             {"x05", 0},
     };
-    EXPECT_EQ(result, tmp);
-
-    EXPECT_ANY_THROW(result = parser.readDataFromFile<int>("chtoEtoZaFile.txt"));
-
-    result = parser.readDataFromFile<int>("CMakeFiles/data/input_for_test3.txt");
-    tmp = {};
-    EXPECT_EQ(result, tmp);
+    EXPECT_EQ(repo.data_, tmp);
 }
 
-TEST(AssemblerTest, CompilingTest) {
+TEST(ParserTests, EmptyDataTest) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
     Parser parser;
-    std::map<std::string, int> data = parser.readDataFromFile<int>("CMakeFiles/data/input_for_test1.txt");
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test3.txt", repo);
+    std::map<std::string, int> tmp = {
+            {"Ak", 0},
+    };
+    EXPECT_EQ(repo.data_, tmp);
+}
+
+TEST(ExecutionTests, Expression1) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test1.txt", repo);
     Assembler assembler;
-    int result;
-    result = assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test1.txt", data);
-    EXPECT_EQ(result, 281);
+    assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test1.txt", repo);
+    EXPECT_EQ(repo.codeExecute(), 281);
+}
 
-    data = parser.readDataFromFile<int>("CMakeFiles/data/input_for_test2.txt");
-    result = assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test2.txt", data);
-    EXPECT_EQ(result, 11);
+TEST(ExecutionTests, Expression2) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test2.txt", repo);
+    Assembler assembler;
+    assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test2.txt", repo);
+    EXPECT_EQ(repo.codeExecute(), 11);
+}
 
-    data = parser.readDataFromFile<int>("CMakeFiles/data/input_for_test3.txt");
-    EXPECT_ANY_THROW(result = assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test3.txt", data));
+TEST(ExecutionTests, Expression3) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test4.txt", repo);
+    Assembler assembler;
+    assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test4.txt", repo);
+    EXPECT_EQ(repo.codeExecute(), 281);
+}
+
+TEST(ExecutionTests, Expression4) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test5.txt", repo);
+    Assembler assembler;
+    assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test5.txt", repo);
+    EXPECT_EQ(repo.codeExecute(), -16);
+}
+
+
+TEST(ExceptionsTests, NoDataNoCodeTest) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    Assembler assembler;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test3.txt", repo);
+    EXPECT_ANY_THROW(
+            assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test3.txt", repo));
+}
+
+TEST(ExceptionsTests, NoCodeTest) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    Assembler assembler;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test6.txt", repo);
+    EXPECT_ANY_THROW(
+            assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test6.txt", repo));
+}
+
+TEST(ExceptionsTests, NoCodeNoEndTest) {
+    Repo<int> repo;
+    Operation<int>::repo_ = &repo;
+    Parser parser;
+    Assembler assembler;
+    parser.readDataFromFile<int>("CMakeFiles/data/input_for_test7.txt", repo);
+    EXPECT_ANY_THROW(assembler.compileCodeFromFile<int>("CMakeFiles/data/input_for_test7.txt", repo));
 }

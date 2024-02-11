@@ -6,6 +6,7 @@
 #include <fstream>
 #include <map>
 #include <sstream>
+#include "Repo.h"
 
 class Parser {
 public:
@@ -18,7 +19,7 @@ public:
     Parser& operator= (const Parser& other) = delete;
 
     template<class T>
-    std::map<std::string, T> readDataFromFile(const std::string& filePath) const {
+    void readDataFromFile(const std::string& filePath, Repo<T>& repo) const {
         std::ifstream fin(filePath, std::ios::in);
         if (!fin.is_open()) {
             throw std::runtime_error("File is not open.");
@@ -33,7 +34,8 @@ public:
 
             if (str == ".code\r") {
                 fin.close();
-                return data;
+                //return;
+                break;
             }
 
             std::string variable;
@@ -48,14 +50,17 @@ public:
                 value += str[i];
                 ++i;
             }
+            if (value == "?") {
+                repo.resultKey_ = variable;
+            }
             std::stringstream converter;
             converter.str(value);
             T number;
             converter >> number;
-            data[variable] = number;
+            repo.data_[variable] = number;
         }
         fin.close();
-        return data;
+        //return;
     }
 };
 
