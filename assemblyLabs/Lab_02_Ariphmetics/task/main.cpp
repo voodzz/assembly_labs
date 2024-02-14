@@ -1,25 +1,11 @@
 #include <iostream>
+#include "taskNumber3.h"
 
 int main() {
-	int a, a_5, result;
+	int a;
 	std::cout << "Input the value of a: ";
 	std::cin >> a;
-
-	__asm {
-		mov ebx, a
-		imul ebx, a
-		imul ebx, a
-		imul ebx, a
-		imul ebx, a
-		mov a_5, ebx
-		mov ebx, a
-		imul ebx, a
-		imul ebx, a
-		add ebx, a_5
-		add ebx, a
-		mov result, ebx
-	}
-
-	std::cout << "The result is: " << result;
+	int n = taskNumberThree(a);
+	std::cout << "The value of n: " << n << '\n';
 	return 0;
 }
