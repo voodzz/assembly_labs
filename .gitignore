@@ -89,6 +89,7 @@ StyleCopReport.xml
 *.vcxproj.filters
 *.vcxproj
 *.sln
+*.config
 
 # Side directories
 spdlog

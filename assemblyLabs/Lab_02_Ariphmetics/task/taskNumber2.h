@@ -3,8 +3,18 @@
 #define TASK_NUMBER_2_H
 
 #include <iostream>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
 
 int taskNumberTwo(int a) {
+	static auto fileLogger = spdlog::basic_logger_mt("Task2Logger", "../logger_for_tasks_1-3.txt");
+	fileLogger->set_level(spdlog::level::debug);
+	fileLogger->info("Task #2 execution has started.");
+	
+	if (a == 0) {
+		fileLogger->critical("Division by zero will occur.");
+		throw std::invalid_argument("Division by zero will occur.");
+	}
 	int a_5;
 	int result;
 	int a_3;
@@ -29,8 +39,10 @@ int taskNumberTwo(int a) {
 		idiv ebx
 		mov result, eax
 	}
+	fileLogger->info("The Assembly code has been executed.");
 
+	fileLogger->info("Task #2 has been executed");
 	return result;
 }
 
-#endif TASK_NUMBER_2_H
+#endif //TASK_NUMBER_2_H
