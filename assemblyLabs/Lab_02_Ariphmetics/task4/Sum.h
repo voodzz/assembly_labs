@@ -20,30 +20,37 @@ uint64_t countTheSum(std::map<std::string, uint16_t>& data) {
 	uint16_t C1 = data["C1"];
 	uint16_t C2 = data["C2"];
 	uint16_t C3 = data["C3"];
+	uint16_t C4 = 0;
 
 	__asm {
 		mov ax, A1
 		mov bx, A2
 		mov dx, A3
+		xor cx, cx
 		add ax, B1		
 		adc bx, B2
 		adc dx, B3
+		adc cx, 0
 		mov C1, ax
 		mov C2, bx
 		mov C3, dx
+		mov C4, cx
 	}
 	fileLogger->info("The Assembly code has been executed.");
 
 	data["C1"] = C1;
 	data["C2"] = C2;
 	data["C3"] = C3;
+	data["C4"] = C4;
 
+	uint64_t c4 = static_cast<uint64_t>(C4);
+	c4 <<= 48;
 	uint64_t c3 = static_cast<uint64_t>(C3);
 	c3 <<= 32;
 	uint64_t c2 = static_cast<uint64_t>(C2);
 	c2 <<= 16;
 	uint64_t c1 = static_cast<uint64_t>(C1);
-	uint64_t result = c3 + c2 + c1;
+	uint64_t result = c4 + c3 + c2 + c1;
 	
 	fileLogger->info("Counting has ended successfully.");
 	return result;

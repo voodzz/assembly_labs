@@ -91,3 +91,28 @@ TEST(CountingTest, Test4) {
 	std::map<std::string, uint16_t> data = readDataFromFile("../task4/data/input_for_test6.txt");
 	EXPECT_EQ(countTheSum(data), 12890439680);
 }
+
+TEST(CountingTest, Test5) {
+	std::map<std::string, uint16_t> data = readDataFromFile("../task4/data/input_for_test7.txt");
+	EXPECT_EQ(countTheSum(data), 263882790666240);
+}
+
+TEST(CountingTest, Test6) {
+	std::map<std::string, uint16_t> data = readDataFromFile("../task4/data/input_for_test8.txt");
+	EXPECT_EQ(countTheSum(data), 4295032832);
+}
+
+TEST(CountingTest, Test7) {
+	std::map<std::string, uint16_t> data = readDataFromFile("../task4/data/input_for_test9.txt");
+	EXPECT_EQ(countTheSum(data), 68719542272);
+}
+
+TEST(CountingTest, Test8) {
+	std::map<std::string, uint16_t> data = readDataFromFile("../task4/data/input_for_test10.txt");
+	EXPECT_EQ(countTheSum(data), 73014509568);
+}
+
+TEST(CountingTest, Test9) {
+	std::map<std::string, uint16_t> data = readDataFromFile("../task4/data/input_for_test11.txt");
+	EXPECT_EQ(countTheSum(data), 281474976710656);
+}
