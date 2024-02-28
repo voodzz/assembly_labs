@@ -10,18 +10,40 @@ std::map<std::string, uint8_t> countEvenNumbersAndZeros(int a) {
 	__asm {
 		xor cl, cl
 		xor ch, ch
+		xor al, al
+		mov ebx, 10
 		mov eax, a
 		cmp a, 0 // is a positive or negative
+		je _zero
 		jl _abs
 		jmp _loop
 		_abs: 
 			neg a
 		_loop:
+			cmp eax, 0
+			je _output
 			cdq
-			idiv 10	// allocation of the last digit
+			idiv ebx	// allocation of the last digit
 			test edx, 1 // 0b00000001
 			jnz _loop // ignoring odd number
+			cmp edx, 0
+			je _zero
+			jmp _even
+		_zero:
+			inc cl
+			cmp eax, 0
+			je _output
+			jmp _loop
+		_even:
 			inc ch
-
+			cmp eax, 0
+			je _output
+			jmp _loop
+		_output:
+			mov evenCounter, ch
+			mov zeroCounter, cl
 	}
+	result["Zero"] = zeroCounter;
+	result["Even"] = evenCounter;
+	return result;
 }
