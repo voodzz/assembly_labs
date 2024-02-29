@@ -11,7 +11,7 @@ int main() {
 	std::pair<int, unsigned int> task2 = findGCD({-24, 56});
 	std::cout << "The fraction after reducing: " << task2.first << '/' << task2.second << '\n';
 	std::cout << '\n';
-	int task3 = exponentiation(3, 4);
+	int task3 = exponentiation(3, 0);
 	std::cout << "The result of exponentiation: " << task3;
 	return 0;
 }
