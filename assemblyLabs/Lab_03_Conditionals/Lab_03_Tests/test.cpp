@@ -6,6 +6,8 @@
 #include "../task/gcd.cpp"
 #include "../task/pow.h"
 #include "../task/pow.cpp"
+#include "../task/powersOfTwo.h"
+#include "../task/powersOfTwo.cpp"
 
 // TESTs FOR TASK1
 
@@ -156,4 +158,30 @@ TEST(TaskThreeTests, CommonTest3) {
 
 TEST(TaskThreeTests, CommonTest4) {
 	EXPECT_EQ(exponentiation(2, 5), 32);
+}
+
+// TEST FOR TASK4
+
+TEST(TaskFourTests, Three) {
+	EXPECT_EQ(compare(3), std::make_pair(1, 2));
+}
+
+TEST(TaskFourTests, One) {
+	EXPECT_EQ(compare(1), std::make_pair(-1, 1));
+}
+
+TEST(TaskFourTests, Two) {
+	EXPECT_EQ(compare(2), std::make_pair(0, 2));
+}
+
+TEST(TaskFourTests, Sixteen) {
+	EXPECT_EQ(compare(16), std::make_pair(3, 5));
+}
+
+TEST(TaskFourTests, Seventeen) {
+	EXPECT_EQ(compare(17), std::make_pair(4, 5));
+}
+
+TEST(TaskFourTests, sixHundered) {
+	EXPECT_EQ(compare(600), std::make_pair(9, 10));
 }
