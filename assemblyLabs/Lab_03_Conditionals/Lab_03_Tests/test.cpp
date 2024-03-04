@@ -8,8 +8,10 @@
 #include "../task/pow.cpp"
 #include "../task/powersOfTwo.h"
 #include "../task/powersOfTwo.cpp"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
-// TESTs FOR TASK1
+// TESTS FOR TASK1
 
 std::map<std::string, uint8_t> result1 = {
 		{"Zero", 0},
@@ -114,7 +116,7 @@ TEST(TaskTwoTests, NegativeNumeratorGreaterThanDenominator) {
 	EXPECT_EQ(findGCD({ -33,3 }), std::make_pair(-11, 1));
 }
 
-// TEST FOR TASK3
+// TESTS FOR TASK3
 
 TEST(TaskThreeTests, Zero) {
 	EXPECT_EQ(exponentiation(0, 20), 0);
@@ -160,7 +162,7 @@ TEST(TaskThreeTests, CommonTest4) {
 	EXPECT_EQ(exponentiation(2, 5), 32);
 }
 
-// TEST FOR TASK4
+// TESTS FOR TASK4
 
 TEST(TaskFourTests, Three) {
 	EXPECT_EQ(compare(3), std::make_pair(1, 2));

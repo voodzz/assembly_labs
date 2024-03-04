@@ -1,6 +1,12 @@
+#pragma warning(disable : 4996)
 #include "CountEvenNumbersAndZeros.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 std::map<std::string, uint8_t> countEvenNumbersAndZeros(int a) {
+	static auto fileLogger = spdlog::basic_logger_mt("Task1_Logger", "loggs/logger.txt");
+	fileLogger->set_level(spdlog::level::debug);
+	fileLogger->debug("Execution started.");
 	std::map<std::string, uint8_t> result = {
 		{"Zero", 0},
 		{"Even", 0}
@@ -45,5 +51,6 @@ std::map<std::string, uint8_t> countEvenNumbersAndZeros(int a) {
 	}
 	result["Zero"] = zeroCounter;
 	result["Even"] = evenCounter;
+	fileLogger->debug("Execution ended.");
 	return result;
 }

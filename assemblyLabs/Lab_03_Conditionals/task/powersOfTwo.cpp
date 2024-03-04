@@ -1,6 +1,12 @@
+#pragma warning(disable : 4996)
 #include "powersOfTwo.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 std::pair<int16_t, int16_t> compare(uint32_t a) {
+    static auto fileLogger = spdlog::basic_logger_mt("Task4_Logger", "loggs/logger.txt");
+    fileLogger->set_level(spdlog::level::debug);
+    fileLogger->debug("Execution started.");
     int16_t lower = 0;
     int16_t greater = 0;
     __asm {
@@ -25,34 +31,14 @@ std::pair<int16_t, int16_t> compare(uint32_t a) {
             imul ebx, 2
             inc cx
             jmp _while
-        /*mov ebx, 2
-        cdq
-        idiv ebx
-        cmp edx, 0
-        je _zero
-        jne _notZero
-        _zero:
-            sub cx, 2
-            mov lower, cx
-            jmp _out
-        _notZero:
-            sub cx, 1
-            mov lower, cx
-            jmp _out*/
         _one:
             mov lower, -1
             mov greater, 1
             jmp _out
-        /*mov ebx, 2
-        xor cl, cl
-        _lower:
-            inc cl
-            imul ebx, 2
-            jle _lower
-        mov lower, cl*/
         _output:
             mov lower, cx
         _out:
     }
+    fileLogger->debug("Execution ended.");
     return std::make_pair(lower, greater);
 }

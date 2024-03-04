@@ -1,6 +1,12 @@
+#pragma warning(disable : 4996)
 #include "pow.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 int exponentiation(int number, int power) {   
+    static auto fileLogger = spdlog::basic_logger_mt("Task3_Logger", "loggs/logger.txt");
+    fileLogger->set_level(spdlog::level::debug);
+    fileLogger->debug("Execution started.");
     int result;
     __asm {
         mov eax, number
@@ -21,5 +27,6 @@ int exponentiation(int number, int power) {
             mov result, 1
         _out:
     }
+    fileLogger->debug("Execution ended.");
     return result;
 }

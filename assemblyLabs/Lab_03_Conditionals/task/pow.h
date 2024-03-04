@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+
 int exponentiation(int number, int power);
 
 #endif // !POW_H
